@@ -24,8 +24,9 @@ wss.on("connection", (socket) => {
     const data: dataType = JSON.parse(e.toString());
     if (data.type === "join" && data.payload.roomId) {
       const payload = { socket: socket, roomId: data.payload.roomId };
-      users.push(payload);
-    } else if (data.type === "message" && data.payload.message) {
+      const isFoundSocket = users.find((e) => e.socket == socket);
+      if (!isFoundSocket) users.push(payload);
+    } else if (data.type === "chat" && data.payload.message) {
       const id = users.find((e) => e.socket == socket)?.roomId;
       users.forEach((e) => {
         if (e.roomId === id && data.payload.message) {
